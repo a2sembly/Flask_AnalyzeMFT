@@ -28,7 +28,6 @@
               <label id="file_input_label" class="custom-file-label" for="image">Select file</label>
             </div>
           </div>
-
           <button onclick="upload('{{ request.url }}');" id="upload_btn" class="btn btn-primary">Upload</button>
 
           <button class="btn btn-primary d-none" id="loading_btn" type="button" disabled>
@@ -48,7 +47,7 @@
         <div id="alert_wrapper"></div>
 
         <div id="analyze_wrapper">
-          <button type="button" id="analyze_btn" class="btn btn-success btn-block" disabled>Analyze</button>
+          <button onclick="Analyze('{{ request.url }}');" id="analyze_btn" class="btn btn-success btn-block">Analyze</button>
         </div>
       </div>
     </div>
@@ -138,6 +137,7 @@ function upload(url) {
 
   // Append the file to the FormData instance
   data.append("file", file);
+  data.append("type", "Upload_file")
 
   // request progress handler
   request.upload.addEventListener("progress", function (e) {
@@ -202,6 +202,29 @@ function upload(url) {
 
   })
 
+}
+
+function Analyze(url) {
+  // Create a new FormData instance
+  var data = new FormData();
+
+  // Create a XMLHTTPRequest instance
+  var request = new XMLHttpRequest();
+
+  // Set the response type
+  request.responseType = "json";
+
+  // Clear any existing alerts
+  alert_wrapper.innerHTML = "";
+
+  // Disable the input during upload
+  input.disabled = true;
+  data.append("type", "Analyze_file")
+  // Open and send the request
+  request.open("post", url);
+  request.send(data);
+  location.href="{{url_for("load")}}";
+  // analyze_btn.disabled = true;
 }
 
 // Function to update the input placeholder
